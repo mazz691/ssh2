@@ -1,0 +1,28 @@
+runConf = session.send_command("sh running-conf")
+    offConf = session.send_command("sh startup-conf")
+    file = open("config.txt", "w")
+    file.write(offConf)
+    file.close()
+    print ('*** Connection Sucessful***')
+
+#option X is for offline file
+print("config has been successful")
+choice = input("choose option X if you would like the offline version or choose Y if you would want the online version")
+if choice =="X":
+     backupfile = open("config.txt", "r")
+     for diff in difflib.context_diff(runConf.split("\n"), backupfile.readline()):
+          print(diff)
+#option Y is for online file
+elif choice == "Y":
+     for diff in difflib.context_diff(runConf.split("\n"), offConf.split("\n")):
+          print(diff)
+   
+#option 2 for Telnet
+elif NetworkType == "2":
+    NetworkInfo['device_type'] = 'cisco_ios_telnet'
+    session = netmiko.ConnectHandler(**NetworkInfo)
+    session.enable()
+    print(session.send_command('sh ip int br'))
+else:
+     exit()
+#py file ends here
